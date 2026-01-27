@@ -1,0 +1,232 @@
+name: Reviews
+description: |-
+
+  Endpoints for viewing and submitting reviews on completed bookings.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/providers/{provider_id}/reviews'
+    metadata:
+      custom: []
+      groupName: Reviews
+      groupDescription: |-
+
+        Endpoints for viewing and submitting reviews on completed bookings.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List Provider Reviews'
+      description: 'Retrieve a paginated list of visible reviews for a specific provider.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      provider_id:
+        custom: []
+        name: provider_id
+        description: 'The ID of the provider.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      provider:
+        custom: []
+        name: provider
+        description: 'The ID of the provider.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      provider_id: 1
+      provider: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": 1,
+                "rating": 5,
+                "comment": "Excellent service, je recommande !",
+                "is_visible": true,
+                "client": {
+                  "id": 1,
+                  "name": "Jean Dupont"
+                },
+                "created_at": "2026-01-25T16:00:00.000000Z"
+              },
+              {
+                "id": 2,
+                "rating": 4,
+                "comment": "Tres bon travail.",
+                "is_visible": true,
+                "client": {
+                  "id": 3,
+                  "name": "Marie Leclerc"
+                },
+                "created_at": "2026-01-22T11:30:00.000000Z"
+              }
+            ],
+            "links": {
+              "first": "http://localhost/api/providers/1/reviews?page=1",
+              "last": "http://localhost/api/providers/1/reviews?page=1",
+              "prev": null,
+              "next": null
+            },
+            "meta": {
+              "current_page": 1,
+              "last_page": 1,
+              "per_page": 15,
+              "total": 2
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Provider]."
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/reviews
+    metadata:
+      custom: []
+      groupName: Reviews
+      groupDescription: |-
+
+        Endpoints for viewing and submitting reviews on completed bookings.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Submit Review'
+      description: 'Submit a review for a completed booking. The authenticated user must be the booking owner and authorized to review.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      booking_id:
+        custom: []
+        name: booking_id
+        description: 'The ID of the completed booking to review.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      rating:
+        custom: []
+        name: rating
+        description: 'Rating from 1 to 5.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      comment:
+        custom: []
+        name: comment
+        description: 'Optional review comment.'
+        required: false
+        example: 'Excellent service, je recommande !'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      booking_id: 1
+      rating: 5
+      comment: 'Excellent service, je recommande !'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "data": {
+              "id": 1,
+              "booking_id": 1,
+              "client_id": 1,
+              "provider_id": 1,
+              "rating": 5,
+              "comment": "Excellent service, je recommande !",
+              "is_visible": true,
+              "created_at": "2026-01-25T16:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "This action is unauthorized."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "rating": ["La note est obligatoire."]
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
