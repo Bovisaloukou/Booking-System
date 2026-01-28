@@ -9,3 +9,10 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Mark generated/vendor files so GitHub ignores them in language stats
+resources/views/scribe/** linguist-generated
+public/vendor/** linguist-vendored
+public/css/filament/** linguist-vendored
+public/js/filament/** linguist-vendored
+.scribe/** linguist-generated
