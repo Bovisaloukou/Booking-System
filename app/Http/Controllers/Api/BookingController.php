@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @group Bookings
@@ -195,7 +196,7 @@ class BookingController extends Controller
         $this->authorize('view', $booking);
 
         return new BookingResource(
-            $booking->load(['provider.user', 'service', 'payment', 'review'])
+            $booking->load(['client', 'provider.user', 'service', 'payment', 'review'])
         );
     }
 
@@ -240,7 +241,13 @@ class BookingController extends Controller
      */
     public function cancel(Booking $booking, Request $request): BookingResource
     {
-        $this->authorize('cancel', $booking);
+        if ($request->user()->id !== $booking->client_id && ! $request->user()->hasRole('admin')) {
+            throw new AccessDeniedHttpException('Vous ne pouvez annuler que vos propres réservations.');
+        }
+
+        if (! $booking->isCancellable()) {
+            throw new AccessDeniedHttpException('Cette réservation ne peut plus être annulée (statut : '.$booking->status->label().').');
+        }
 
         $request->validate([
             'reason' => ['nullable', 'string', 'max:500'],

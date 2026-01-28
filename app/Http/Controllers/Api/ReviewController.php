@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\BookingStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Resources\ReviewResource;
@@ -9,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Provider;
 use App\Models\Review;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @group Reviews
@@ -119,7 +121,17 @@ class ReviewController extends Controller
     {
         $booking = Booking::findOrFail($request->booking_id);
 
-        $this->authorize('review', $booking);
+        if ($request->user()->id !== $booking->client_id) {
+            throw new AccessDeniedHttpException('Vous ne pouvez noter que vos propres réservations.');
+        }
+
+        if ($booking->status !== BookingStatus::Completed) {
+            throw new AccessDeniedHttpException('Vous ne pouvez noter qu\'une réservation terminée.');
+        }
+
+        if ($booking->review) {
+            throw new AccessDeniedHttpException('Vous avez déjà noté cette réservation.');
+        }
 
         $review = Review::create([
             'booking_id' => $booking->id,
