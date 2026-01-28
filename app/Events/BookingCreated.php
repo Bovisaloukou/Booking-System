@@ -3,8 +3,8 @@
 namespace App\Events;
 
 use App\Models\Booking;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -20,8 +20,8 @@ class BookingCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('bookings'),
-            new Channel('provider.'.$this->booking->provider_id),
+            new PrivateChannel('bookings'),
+            new PrivateChannel('provider.'.$this->booking->provider_id),
         ];
     }
 

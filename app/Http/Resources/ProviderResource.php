@@ -11,8 +11,8 @@ class ProviderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->user->name,
-            'email' => $this->user->email,
+            'name' => $this->whenLoaded('user', fn () => $this->user->name, $this->user?->name),
+            'email' => $this->whenLoaded('user', fn () => $this->user->email, $this->user?->email),
             'bio' => $this->bio,
             'speciality' => $this->speciality,
             'hourly_rate' => $this->hourly_rate,

@@ -35,6 +35,8 @@ class Booking extends Model
     {
         return [
             'date' => 'date',
+            'start_time' => 'datetime:H:i',
+            'end_time' => 'datetime:H:i',
             'total_price' => 'decimal:2',
             'status' => BookingStatus::class,
             'confirmed_at' => 'datetime',

@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
 
             $provider = Provider::create([
                 'user_id' => $user->id,
-                'bio' => "Prestataire expérimenté avec plus de {$i}0 ans d'expérience.",
+                'bio' => 'Prestataire expérimenté avec plus de '.($i + 1) * 5 ." ans d'expérience.",
                 'speciality' => $categories[$i]['name'],
                 'hourly_rate' => 50 + ($i * 10),
                 'is_active' => true,

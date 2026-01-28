@@ -16,7 +16,7 @@ class StoreBookingRequest extends FormRequest
         return [
             'provider_id' => ['required', 'exists:providers,id'],
             'service_id' => ['required', 'exists:services,id'],
-            'time_slot_id' => ['required', 'exists:time_slots,id'],
+            'time_slot_id' => ['required', 'exists:time_slots,id,provider_id,'.$this->provider_id],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }

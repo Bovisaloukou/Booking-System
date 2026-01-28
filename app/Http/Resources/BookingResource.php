@@ -23,10 +23,13 @@ class BookingResource extends JsonResource
             'confirmed_at' => $this->confirmed_at?->toIso8601String(),
             'cancelled_at' => $this->cancelled_at?->toIso8601String(),
             'completed_at' => $this->completed_at?->toIso8601String(),
-            'client' => [
+            'client' => $this->whenLoaded('client', fn () => [
                 'id' => $this->client->id,
                 'name' => $this->client->name,
-            ],
+            ], [
+                'id' => $this->client_id,
+                'name' => $this->client?->name,
+            ]),
             'provider' => new ProviderResource($this->whenLoaded('provider')),
             'service' => new ServiceResource($this->whenLoaded('service')),
             'payment' => new PaymentResource($this->whenLoaded('payment')),

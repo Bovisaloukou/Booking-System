@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Enums\PaymentStatus;
+use App\Events\BookingConfirmed;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Notifications\BookingConfirmationNotification;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -54,7 +56,11 @@ class StripePaymentService
         ]);
 
         // Confirm the booking after successful payment
-        $payment->booking->confirm();
+        $booking = $payment->booking;
+        $booking->confirm();
+
+        $booking->client->notify(new BookingConfirmationNotification($booking));
+        event(new BookingConfirmed($booking));
 
         return $payment;
     }
