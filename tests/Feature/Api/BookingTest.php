@@ -220,8 +220,8 @@ class BookingTest extends TestCase
                 'time_slot_id' => $this->timeSlot->id,
             ]);
 
-        // The BookingService uses lockForUpdate + firstOrFail, so it should return 404
-        $response->assertStatus(404);
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['time_slot_id']);
     }
 
     public function test_time_slot_becomes_unavailable_after_booking(): void
@@ -266,7 +266,8 @@ class BookingTest extends TestCase
                 'time_slot_id' => $this->timeSlot->id,
             ]);
 
-        $response->assertStatus(404);
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['time_slot_id']);
     }
 
     // -------------------------------------------------------

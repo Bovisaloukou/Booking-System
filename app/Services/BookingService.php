@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\BookingConfirmationNotification;
 use App\Notifications\BookingCreatedNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class BookingService
 {
@@ -21,7 +22,13 @@ class BookingService
             $timeSlot = TimeSlot::where('id', $timeSlotId)
                 ->where('is_available', true)
                 ->lockForUpdate()
-                ->firstOrFail();
+                ->first();
+
+            if (! $timeSlot) {
+                throw ValidationException::withMessages([
+                    'time_slot_id' => ['Ce créneau n\'est plus disponible.'],
+                ]);
+            }
 
             $service = Service::findOrFail($serviceId);
 
